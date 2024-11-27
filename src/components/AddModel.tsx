@@ -11,6 +11,7 @@ export default function AddModel({
   title,
   children,
 }: ModalProps) {
+  console.log('is',isOpen);
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
       <div className="bg-white w-full max-w-lg mx-4 rounded-lg shadow-lg h-66 overflow-y-auto">

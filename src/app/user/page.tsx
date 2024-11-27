@@ -22,6 +22,8 @@ export default function UserPage() {
 
   const onSubmit = (data: UserFormInputs) => {
     console.log("Form Data:", data);
+    setUserList([])
+
   };
 
   const closeModel = () => {

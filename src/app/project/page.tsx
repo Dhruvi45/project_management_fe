@@ -45,6 +45,7 @@ export default function ProjectPage() {
   } = useForm<IProject>();
 
   const onSubmit = (data: IProject) => {
+    setUserList([])
     console.log("Form Data:", data);
   };
 

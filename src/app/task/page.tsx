@@ -48,6 +48,8 @@ export default function TaskPage() {
   } = useForm<ITask>();
 
   const onSubmit = (data: ITask) => {
+    setUserList([])
+
     console.log("Form Data:", data);
   };
 
