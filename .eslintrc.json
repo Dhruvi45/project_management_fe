@@ -16,7 +16,9 @@
     "react"
   ],
   "rules": {
-    "react/no-children-prop": "warn"
+    "react/no-children-prop": "warn",
+    "semi": ["error", "always"],
+    "indent": ["error", 2]
   },
   "settings": {
     "react": {
