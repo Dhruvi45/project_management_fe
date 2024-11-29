@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import AddModel from "src/components/AddModel";
+import AddModel from "src/components/ConfirmationDialog";
 import Table from "src/components/Table";
 import { useForm } from "react-hook-form";
 // Define interfaces for IUser and IProject

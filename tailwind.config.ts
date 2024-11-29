@@ -18,11 +18,6 @@ const config: Config = {
       boxShadow: {
         lg: '0 10px 15px rgba(0, 0, 0, 0.1)',
       },
-      height:{
-        '64':'431px',
-        '365':'342px',
-        '66':'450px'
-      }
     },
   },
   plugins: [],
