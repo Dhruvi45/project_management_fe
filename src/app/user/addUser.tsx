@@ -21,10 +21,10 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
   useEffect(() => {
     getRoleList();
     if(id){
-      getUserById()
+      getUserById();
     }
     else{
-      reset()
+      reset();
     }
   }, []);
   
@@ -40,10 +40,10 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
     console.log("Form Data:", data);
     setLoading(true);
     if(id){
-      updateUser(data)
+      updateUser(data);
     }
     else{
-      addUser(data)
+      addUser(data);
     }
    
   };
@@ -56,13 +56,13 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
     .then((response) => {
       console.log(response.data);
       setRoleList(response.data.data);
-      onClose()
+      onClose();
     })
     .catch((error) => console.error(error))
     .finally(() => {
       setLoading(false);
     });
-  }
+  };
 
   const updateUser=(data:UserFormInputs)=>{
     axiosInstance
@@ -70,13 +70,13 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
     .then((response) => {
       console.log(response.data);
       setRoleList(response.data.data);
-      onClose()
+      onClose();
     })
     .catch((error) => console.error(error))
     .finally(() => {
       setLoading(false);
     });
-  }
+  };
 
   const getRoleList = async () => {
     try {
@@ -103,7 +103,7 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
         .get(`/users/${id}`)
         .then((response) => {
           console.log(response.data);
-          reset(response.data)
+          reset(response.data);
         })
         .catch((error) => console.error(error))
         .finally(() => {
@@ -112,7 +112,7 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
     } catch (error) {
       console.error("Error fetching roles:", error);
     }
-  }
+  };
   if (loading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">

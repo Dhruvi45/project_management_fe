@@ -17,7 +17,7 @@ export default function UserPage() {
   const [isShow, setIsShow] = useState(false);
   const [selectUserId, setSelectedUserId] = useState("");
   const [isDelete, setIsDelete] = useState(false);
-  const hearder = [
+  const harder = [
     { label: "Action", key: "action" },
     { label: "Name", key: "name" },
     { label: "Email", key: "email" },
@@ -52,9 +52,9 @@ export default function UserPage() {
     setLoading(true);
     axiosInstance
       .delete(`/users/${selectUserId}`)
-      .then((response) => {
+      .then(() => {
         getUserList();
-        closeConfirationModel();
+        closeConfirmationModel();
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
@@ -65,7 +65,7 @@ export default function UserPage() {
     setSelectedUserId("");
     getUserList();
   };
-  const closeConfirationModel = () => {
+  const closeConfirmationModel = () => {
     setIsDelete(false);
     setSelectedUserId("");
   };
@@ -116,7 +116,7 @@ export default function UserPage() {
       </div>
       {userList.length > 0 && (
         <Table
-          headers={hearder}
+          headers={harder}
           data={userList}
           setSelectedId={setSelectedUserId}
           setIsDelete={setIsDelete}
@@ -128,7 +128,7 @@ export default function UserPage() {
       {isDelete && (
         <ConfirmationDialog
           isOpen={isDelete}
-          onClose={closeConfirationModel}
+          onClose={closeConfirmationModel}
           onConfirm={deleteUser}
           message={"Are you sure you want to delete user?"}
           title={"Delete User"}

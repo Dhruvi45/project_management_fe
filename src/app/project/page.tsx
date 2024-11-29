@@ -1,64 +1,47 @@
 "use client";
 import { useState } from "react";
 // import AddModel from "src/components/ConfirmationDialog";
-import Table from "src/components/Table";
-import { useForm } from "react-hook-form";
+// import Table from "src/components/Table";
+// import { useForm } from "react-hook-form";
 // Define interfaces for IUser and IProject
-interface IUser {
-  id: string;
-  name: string;
-}
+// interface IUser {
+//   id: string;
+//   name: string;
+// }
 
-interface IProject {
-  title: string;
-  description?: string;
-  owner: IUser; // Selected owner
-  members: IUser[]; // Array of selected members
-  tasks: string[]; // Array of Task IDs
-}
-// Dummy Data for Users and Tasks
-const dummyUsers: IUser[] = [
-  { id: "1", name: "Alice" },
-  { id: "2", name: "Bob" },
-  { id: "3", name: "Charlie" },
-  { id: "1", name: "Alice" },
-  { id: "2", name: "Bob" },
-  { id: "3", name: "Charlie" },
-  { id: "1", name: "Alice" },
-  { id: "2", name: "Bob" },
-  { id: "3", name: "Charlie" },
-];
+// interface IProject {
+//   title: string;
+//   description?: string;
+//   owner: IUser; // Selected owner
+//   members: IUser[]; // Array of selected members
+//   tasks: string[]; // Array of Task IDs
+// }
 
-const dummyTasks: { id: string; title: string }[] = [
-  { id: "t1", title: "Task 1" },
-  { id: "t2", title: "Task 2" },
-  { id: "t3", title: "Task 3" },
-];
 export default function ProjectPage() {
   const [showFilters, setShowFilters] = useState(false);
-  const [userList, setUserList] = useState([]);
-  const [isShow, setIsShow] = useState(false);
-  const [selectUserId, setSelectedUserId] = useState("");
-  const [isDelete, setIsDelete] = useState(false);
-  const hearder = [
-    { label: "Action", key: "action" },    
-    { label: "Created Date", key: "createdAt" },
-    { label: "Updated Date", key: "updatedAt" },
-  ];
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IProject>();
+  // const [userList] = useState([]);
+  // const [ setIsShow] = useState(false);
+  // const [setSelectedUserId] = useState("");
+  // const [setIsDelete] = useState(false);
+  // const harder = [
+  //   { label: "Action", key: "action" },    
+  //   { label: "Created Date", key: "createdAt" },
+  //   { label: "Updated Date", key: "updatedAt" },
+  // ];
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm<IProject>();
 
-  const onSubmit = (data: IProject) => {
-    setUserList([])
-    console.log("Form Data:", data);
-  };
+  // const onSubmit = (data: IProject) => {
+  //   setUserList([])
+  //   console.log("Form Data:", data);
+  // };
 
-  const closeModel = () => {
-    setIsShow(false);
-  };
+  // const closeModel = () => {
+  //   setIsShow(false);
+  // };
 
   // const AddForm = () => {
   //   return (
@@ -241,7 +224,8 @@ export default function ProjectPage() {
             {/* Add User Button */}
             <button 
             className="flex items-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-            onClick={()=>setIsShow(true)}>
+            // onClick={()=>setIsShow(true)}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 mr-2"
@@ -258,23 +242,9 @@ export default function ProjectPage() {
             </button>
           </div>
         </div>
-        {userList.length > 0 && (
-          <Table
-            headers={hearder}
-            data={userList}
-            setSelectedId={setSelectedUserId}
-          setIsDelete={setIsDelete}
-          />
-        )}
+     
       </div>
-      {/* {isShow && (
-        <AddModel
-          isOpen={false}
-          onClose={closeModel}
-          title="Add Project"
-          children={<AddForm />}
-        />
-      )} */}
+     
     </div>
   );
   }

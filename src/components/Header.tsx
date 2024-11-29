@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { useState } from 'react';
-import logo from '../../public/assets/images/logo1.png';
+import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
+import logo from "../../public/assets/images/logo1.png";
 
 export default function Header() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);

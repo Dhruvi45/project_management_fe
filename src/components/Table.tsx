@@ -7,11 +7,16 @@ type HeadersProps = {
   key: string;
 };
 
+type DataRow = {
+  _id: string;
+  [key: string]: string | number | Date ; // Adjust according to expected data types
+};
+
 type TableProps = {
   headers: HeadersProps[];
-  data: any[];
-  setSelectedId: Function;
-  setIsDelete:Function;
+  data: DataRow[];
+  setSelectedId: (id: string) => void;
+  setIsDelete: (value: boolean) => void;
 };
 
 export default function Table({ headers, data, setSelectedId, setIsDelete }: TableProps) {
@@ -19,7 +24,7 @@ export default function Table({ headers, data, setSelectedId, setIsDelete }: Tab
 
   const handleOutsideClick = () => {
     setOpenMenuIndex(null); 
-  }
+  };
 
   return (
     <div className="overflow-auto shadow-md sm:rounded-lg h-365 my-4 min-h-[26rem]">
@@ -37,7 +42,7 @@ export default function Table({ headers, data, setSelectedId, setIsDelete }: Tab
 
         {/* Body Section */}
         <tbody>
-          {data.map((key: any, rowIndex: number) => {
+          {data.map((key: DataRow, rowIndex: number) => {
             const rowBgColor =
               rowIndex % 2 === 0
                 ? "bg-gray-200 dark:bg-gray-700"
@@ -85,7 +90,7 @@ export default function Table({ headers, data, setSelectedId, setIsDelete }: Tab
                             <button
                               className="text-red-500 hover:text-red-700 focus:outline-none"
                               onClick={() => {
-                                setIsDelete(true)
+                                setIsDelete(true);
                                 setSelectedId(key._id);
                               }}
                             >
