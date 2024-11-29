@@ -1,28 +1,10 @@
 {
-  "parser": "@babel/eslint-parser",
-  "parserOptions": {
-    "ecmaVersion": 2020,  // or the latest ECMAScript version
-    "sourceType": "module",  // for ES modules (import/export)
-    "ecmaFeatures": {
-      "jsx": true  // enable JSX parsing
-    }
-  },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "react-app"
-  ],
-  "plugins": [
-    "react"
-  ],
+  "extends": ["next/core-web-vitals", "next/typescript"],
   "rules": {
-    "react/no-children-prop": "warn",
-    "semi": ["error", "always"],
-    "indent": ["error", 2]
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
+    // You can add custom rules or override existing ones here
+    "react/react-in-jsx-scope": "off",  // If you're using React 17+ JSX Transform
+    "no-unused-vars": ["warn"],  // Warning for unused variables
+    "semi": ["error", "always"],  // Enforce semicolons
+    "quotes": ["error", "double"] // Enforce double quotes
   }
 }
