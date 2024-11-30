@@ -53,9 +53,7 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
   const addUser=(data:UserFormInputs)=>{
     axiosInstance
     .post("/users",data)
-    .then((response) => {
-      console.log(response.data);
-      setRoleList(response.data.data);
+    .then(() => {
       onClose();
     })
     .catch((error) => console.error(error))
@@ -67,9 +65,7 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
   const updateUser=(data:UserFormInputs)=>{
     axiosInstance
     .put(`/users/${id}`,data)
-    .then((response) => {
-      console.log(response.data);
-      setRoleList(response.data.data);
+    .then(() => {
       onClose();
     })
     .catch((error) => console.error(error))
@@ -84,7 +80,6 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
       axiosInstance
         .get("roles/list")
         .then((response) => {
-          console.log(response.data);
           setRoleList(response.data.data);
         })
         .catch((error) => console.error(error))

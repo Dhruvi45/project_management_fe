@@ -5,12 +5,14 @@ import Loader from "src/components/Loader";
 import Table from "src/components/Table";
 import axiosInstance from "../lib/axios";
 import AddUser from "./addUser";
+
 export type UserFormInputs = {
   name: string;
   email: string;
   password: string;
-  role: "admin" | "project_manager" | "team_member" | "guest";
+  role: string;
 };
+
 export default function UserPage() {
   const [loading, setLoading] = useState(false);
   const [userList, setUserList] = useState([]);
@@ -76,24 +78,7 @@ export default function UserPage() {
     <>
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Manage User</h1>
-        <div className="flex items-center gap-3">
-          {/* <button
-            className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full hover:bg-gray-200"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-600"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H5a1 1 0 110-2h3V6a1 1 0 011-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button> */}
+        <div className="flex items-center gap-3">          
           <button
             className="flex items-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
             onClick={() => setIsShow(true)}
