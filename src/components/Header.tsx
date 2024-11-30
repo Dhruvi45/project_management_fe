@@ -6,11 +6,18 @@ import { useState } from "react";
 import logo from "../../public/assets/images/logo1.png";
 import { FaUser } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { Permission, useAuth } from "src/app/lib/useAuth";
 
 export default function Header() {
+  const { user } = useAuth();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const router = useRouter();
+
+  const canAccessProject = user?.role.permissions.some((permission: Permission) => permission.resource === "projects");
+  const canAccessTask = user?.role.permissions.some((permission: Permission) => permission.resource === "projects");
+  const canAccessUser = user?.role.permissions.some((permission: Permission) => permission.resource === "projects");
+
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -67,25 +74,30 @@ export default function Header() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-
-                <Link
-                  href="/user"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  User
-                </Link>
-                <Link
-                  href="/project"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Projects
-                </Link>
-                <Link
-                  href="/task"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Tasks
-                </Link>
+                {canAccessUser &&
+                  <Link
+                    href="/user"
+                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  >
+                    User
+                  </Link>
+                }{
+                  canAccessProject &&
+                  <Link
+                    href="/project"
+                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  >
+                    Projects
+                  </Link>
+                }
+                {canAccessTask &&
+                  <Link
+                    href="/task"
+                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  >
+                    Tasks
+                  </Link>
+                }
               </div>
             </div>
           </div>
@@ -113,12 +125,12 @@ export default function Header() {
                   aria-orientation="vertical"
                   aria-labelledby="user-menu-button"
                 >
-                 
+
                   <Link
-                     href="/login"
-                     className="block px-4 py-2 text-sm text-gray-700"
-                     role="menuitem"
-                     onClick={handleSignOut}
+                    href="/login"
+                    className="block px-4 py-2 text-sm text-gray-700"
+                    role="menuitem"
+                    onClick={handleSignOut}
                   >
                     Sign out
                   </Link>
@@ -133,31 +145,28 @@ export default function Header() {
       {isMobileMenuOpen && (
         <div className="sm:hidden" id="mobile-menu">
           <div className="space-y-1 px-2 pb-3 pt-2">
-            <Link
-              href="/"
-              className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
-              aria-current="page"
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="/user"
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              User
-            </Link>
-            <Link
-              href="/project"
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              Projects
-            </Link>
-            <Link
-              href="/task"
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              Tasks
-            </Link>
+            {canAccessUser &&
+              <Link
+                href="/user"
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                User
+              </Link>}
+            {canAccessProject &&
+              <Link
+                href="/project"
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Projects
+              </Link>
+            }{canAccessTask &&
+              <Link
+                href="/task"
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Tasks
+              </Link>
+            }
           </div>
         </div>
       )}

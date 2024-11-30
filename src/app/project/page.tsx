@@ -35,15 +35,16 @@ export default function ProjectPage() {
   ];
 
    // Check if the user has the required permissions
+   const canViewProject = user?.role.permissions.some((permission: Permission) => permission.resource === "projects"&& permission.actions.includes("view"));
    const canCreateProject = user?.role.permissions.some((permission: Permission) => permission.resource === "projects" && permission.actions.includes("create"));
-  
+
    useEffect(() => {
     console.log(user,"projectList");
      if (loading) return; // Avoid rendering while loading the user data
      if (!user) {
        // Redirect to login if user is not authenticated
-      //  window.location.href = "/login";
-     } else if (!canCreateProject) {
+       window.location.href = "/login";
+     } else if (!canViewProject) {
        // Redirect or show an error if the user doesn't have permission to create projects
        window.location.href = "/";
      }
@@ -132,6 +133,7 @@ export default function ProjectPage() {
           data={projectList}
           setSelectedId={setSelectedProjectId}
           setIsDelete={setIsDelete}
+          resource={"projects"}
         />
       )}
       {isShow && (
