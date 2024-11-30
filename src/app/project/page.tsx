@@ -5,6 +5,8 @@ import Table from "src/components/Table";
 import AddProject from "./addProject";
 import ConfirmationDialog from "src/components/ConfirmationDialog";
 import axiosInstance from "../lib/axios";
+import Layout2 from "../layout2";
+import { Permission, useAuth } from "../lib/useAuth";
 
 
 export interface IProject {
@@ -16,7 +18,8 @@ export interface IProject {
 }
 
 export default function ProjectPage() {
-  const [loading, setLoading] = useState(false);
+  const { user, loading  } = useAuth();
+  // const [loading, setLoading] = useState(false);
   const [projectList, setProjectList] = useState([]);
   const [isShow, setIsShow] = useState(false);
   const [selectProjectId, setSelectedProjectId] = useState("");
@@ -30,7 +33,21 @@ export default function ProjectPage() {
     { label: "Created Date", key: "createdAt" },
     { label: "Updated Date", key: "updatedAt" },
   ];
+
+   // Check if the user has the required permissions
+   const canCreateProject = user?.role.permissions.some((permission: Permission) => permission.resource === "projects" && permission.actions.includes("create"));
   
+   useEffect(() => {
+    console.log(user,"projectList");
+     if (loading) return; // Avoid rendering while loading the user data
+     if (!user) {
+       // Redirect to login if user is not authenticated
+      //  window.location.href = "/login";
+     } else if (!canCreateProject) {
+       // Redirect or show an error if the user doesn't have permission to create projects
+       window.location.href = "/";
+     }
+   }, [user, loading]);
 
   const closeModel = () => {
     setIsShow(false);
@@ -46,14 +63,14 @@ export default function ProjectPage() {
   };
 
   const getProjectList = () => {
-    setLoading(true);
+    // setLoading(true);
     axiosInstance
       .get("projects")
       .then((response) => {
         setProjectList(response.data);
       })
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+      .catch((error) => console.error(error));
+      // .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -68,15 +85,15 @@ export default function ProjectPage() {
   }, [selectProjectId]);
 
   const deleteProject = () => {
-    setLoading(true);
+    // setLoading(true);
     axiosInstance
       .delete(`/projects/${selectProjectId}`)
       .then(() => {
         getProjectList();
         closeConfirmationModel();
       })
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+      .catch((error) => console.error(error));
+      // .finally(() => setLoading(false));
   };
 
 
@@ -84,10 +101,11 @@ export default function ProjectPage() {
 
   return (
     <>
+    <Layout2>
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">Manage Project</h1>
         <div className="flex items-center gap-3">          
-          <button
+        {canCreateProject &&<button
             className="flex items-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
             onClick={() => setIsShow(true)}
           >
@@ -105,6 +123,7 @@ export default function ProjectPage() {
             </svg>
             Add Project
           </button>
+}
         </div>
       </div>
       {projectList.length > 0 && (
@@ -127,6 +146,7 @@ export default function ProjectPage() {
           title={"Delete Project"}
         />
       )}
+      </Layout2>
     </>
   );
   }

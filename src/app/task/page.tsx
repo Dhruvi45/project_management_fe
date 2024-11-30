@@ -5,6 +5,7 @@ import Table from "src/components/Table";
 import ConfirmationDialog from "src/components/ConfirmationDialog";
 import axiosInstance from "../lib/axios";
 import Loader from "src/components/Loader";
+import Layout2 from "../layout2";
 
 export interface ITask{
   title: string;
@@ -84,6 +85,7 @@ export default function TaskPage() {
 
   return (
     <>
+    <Layout2>
     <div className="flex justify-between items-center">
       <h1 className="text-xl font-bold text-gray-800">Manage Task</h1>
       <div className="flex items-center gap-3">          
@@ -127,6 +129,7 @@ export default function TaskPage() {
         title={"Delete Task"}
       />
     )}
+    </Layout2>
   </>
     );
   }

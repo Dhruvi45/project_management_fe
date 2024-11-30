@@ -15,10 +15,10 @@ axiosInstance.interceptors.request.use(
     const headers: AxiosRequestHeaders = config.headers || {};
     
     // Add Authorization header if access token exists
-    // const accessToken = localStorage.getItem("accessToken");
-    // if (accessToken) {
-    //   headers["Authorization"] = `Bearer ${JSON.parse(accessToken)}`;
-    // }
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      headers["Authorization"] = `Bearer ${accessToken}`;
+    }
 
     config.headers = headers; // Assign the modified headers back to config
     return config;

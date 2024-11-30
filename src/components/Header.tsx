@@ -4,10 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import logo from "../../public/assets/images/logo1.png";
+import { FaUser } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const router = useRouter();
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -15,6 +18,11 @@ export default function Header() {
 
   const toggleProfileDropdown = () => {
     setProfileDropdownOpen(!isProfileDropdownOpen);
+  };
+
+  const handleSignOut = () => {
+    localStorage.clear();
+    router.push("/login");
   };
 
   return (
@@ -59,13 +67,7 @@ export default function Header() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                <Link
-                  href="/"
-                  className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
-                  aria-current="page"
-                >
-                  Dashboard
-                </Link>
+
                 <Link
                   href="/user"
                   className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
@@ -100,13 +102,7 @@ export default function Header() {
                   aria-haspopup="true"
                 >
                   <span className="sr-only">Open user menu</span>
-                  <Image
-                    className="h-8 w-8 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    alt="User profile"
-                    width={32}
-                    height={32}
-                  />
+                  <FaUser className="h-8 w-8 text-gray-400" />
                 </button>
               </div>
 
@@ -117,24 +113,12 @@ export default function Header() {
                   aria-orientation="vertical"
                   aria-labelledby="user-menu-button"
                 >
+                 
                   <Link
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
-                  >
-                    Your Profile
-                  </Link>
-                  <Link
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
-                  >
-                    Settings
-                  </Link>
-                  <Link
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
+                     href="/login"
+                     className="block px-4 py-2 text-sm text-gray-700"
+                     role="menuitem"
+                     onClick={handleSignOut}
                   >
                     Sign out
                   </Link>
