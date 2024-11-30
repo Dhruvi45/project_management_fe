@@ -28,7 +28,7 @@ export default function TaskPage() {
     { label: "Action", key: "action" },
     { label: "Title", key: "title" },
     { label: "Description", key: "description" },
-    { label: "Project", key: "project" },
+    { label: "Project", key: "projectTitle" },
     { label: "Completed", key: "completed" },
     { label: "Assigned", key: "assignedTo" },
     { label: "DueDate", key: "dueDate" },

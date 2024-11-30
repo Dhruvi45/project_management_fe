@@ -25,14 +25,21 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
     const [projectList, setProjectList] = useState<IProjectList[]>([]);
 
     useEffect(() => {
-        getProjectList();
-        if (id) {
-            getTaskById();
-        }
-        else {
-            reset();
-        }
-    }, []);
+        const initialize = async () => {
+            try {
+                await getProjectList();
+                if (id) {
+                    await getTaskById();
+                } else {
+                    reset();
+                }
+            } catch (error) {
+                console.error("Initialization error:", error);
+            }
+        };
+
+        initialize();
+    }, [id]);
 
 
     const {
@@ -81,26 +88,19 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
             });
     };
 
-    const getProjectMemberList = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedValue = event.target.value;
-        console.log("selectedValue", selectedValue);
-        if (!selectedValue) {
-            setUserList([]);
-        } else {
-            try {
-                setLoading(true);
-                axiosInstance
-                    .get(`projectMemberList/${selectedValue}`)
-                    .then((response) => {
-                        setUserList(response.data.data);
-                    })
-                    .catch((error) => console.error(error))
-                    .finally(() => {
-                        setLoading(false);
-                    });
-            } catch (error) {
-                console.error("Error fetching roles:", error);
+    const getProjectMemberList = async (projectId: string) => {
+        try {
+            setLoading(true);
+            if (!projectId) {
+                setUserList([]);
+                return;
             }
+            const { data } = await axiosInstance.get(`projectMemberList/${projectId}`);
+            setUserList(data.data);
+        } catch (error) {
+            console.error("Error fetching project members:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -125,18 +125,25 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
     const getTaskById = async () => {
         try {
             setLoading(true);
-            axiosInstance
-                .get(`/tasks/${id}`)
-                .then((response) => {
-                    console.log(response.data);
-                    reset(response.data);
-                })
-                .catch((error) => console.error(error))
-                .finally(() => {
-                    setLoading(false);
-                });
+            const { data } = await axiosInstance.get(`/tasks/${id}`);
+            console.log(data);
+            // Convert dueDate to 'YYYY-MM-DD' format for input[type="date"]
+            const formattedDueDate = data.dueDate ? new Date(data.dueDate).toISOString().split("T")[0] : "";
+
+            // Prepare data for resetting the form
+            const formattedData = {
+                ...data,
+                dueDate: formattedDueDate,
+            };
+            // Fetch project members based on the task's project
+            await getProjectMemberList(data.project);
+
+            // Reset form with fetched data
+            reset(formattedData);
         } catch (error) {
-            console.error("Error fetching roles:", error);
+            console.error("Error fetching task by ID:", error);
+        } finally {
+            setLoading(false);
         }
     };
     if (loading) {
@@ -254,7 +261,7 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
                                     id="project"
                                     {...register("project", {
                                         required: "Project is required",
-                                        onChange: getProjectMemberList
+                                        onChange: (event) => getProjectMemberList(event.target.value)
                                     })}
                                     className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 >

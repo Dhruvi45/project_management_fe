@@ -99,7 +99,7 @@ export default function Table({ headers, data, setSelectedId, setIsDelete }: Tab
                           </div>
                         )}
                       </div>
-                    ) : header.key === "createdAt" ||
+                    ) : header.key === "createdAt" || header.key === "dueDate" ||
                       header.key === "updatedAt" ? (
                       moment(new Date(key[header.key]).toString()).format(
                         "DD-MM-YYYY"
