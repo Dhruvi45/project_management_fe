@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import Loader from "src/components/Loader";
 import axiosInstance from "../lib/axios";
 import { UserFormInputs } from "./page";
+import { useAuth } from "../lib/useAuth";
 // import useApiClient from "../lib/axios";
 interface ModalProps {
   isOpen: boolean;
@@ -16,10 +17,16 @@ interface IRoleList {
 }
 
 export default function AddUser({ isOpen, onClose,id }: ModalProps) {
+  const { user  } = useAuth();
+
   const [loading, setLoading] = useState(false);
   const [roleList, setRoleList] = useState<IRoleList[]>([]);
   useEffect(() => {
-    getRoleList();
+    if (user?.role.name === "Project Manager") {
+      getRoleList("roles/tmlist");
+    } else {
+      getRoleList("roles/list");
+    }
     if(id){
       getUserById();
     }
@@ -74,11 +81,11 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
     });
   };
 
-  const getRoleList = async () => {
+  const getRoleList = async (reqUrl:string) => {
     try {
       setLoading(true);
       axiosInstance
-        .get("roles/list")
+        .get(reqUrl)
         .then((response) => {
           setRoleList(response.data.data);
         })

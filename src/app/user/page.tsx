@@ -6,6 +6,7 @@ import Table from "src/components/Table";
 import axiosInstance from "../lib/axios";
 import AddUser from "./addUser";
 import Layout2 from "../layout2";
+import { Permission, useAuth } from "../lib/useAuth";
 
 export type UserFormInputs = {
   name: string;
@@ -15,11 +16,17 @@ export type UserFormInputs = {
 };
 
 export default function UserPage() {
-  const [loading, setLoading] = useState(false);
+  const { user, loading  } = useAuth();
+  // const [loading, setLoading] = useState(false);
   const [userList, setUserList] = useState([]);
   const [isShow, setIsShow] = useState(false);
   const [selectUserId, setSelectedUserId] = useState("");
   const [isDelete, setIsDelete] = useState(false);
+
+  // Check if the user has the required permissions
+  const canView = user?.role.permissions.some((permission: Permission) => permission.resource === "users"&& permission.actions.includes("view"));
+  const canCreate = user?.role.permissions.some((permission: Permission) => permission.resource === "users" && permission.actions.includes("create"));
+
   const harder = [
     { label: "Action", key: "action" },
     { label: "Name", key: "name" },
@@ -32,6 +39,17 @@ export default function UserPage() {
   useEffect(() => {
     getUserList();
   }, []);
+  useEffect(() => {
+    console.log(user,"projectList");
+     if (loading) return; // Avoid rendering while loading the user data
+     if (!user) {
+       // Redirect to login if user is not authenticated
+       window.location.href = "/login";
+     } else if (!canView) {
+       // Redirect or show an error if the user doesn't have permission to create projects
+       window.location.href = "/";
+     }
+   }, [user, loading]);
 
   useEffect(() => {
     console.log("selectUserId", selectUserId);
@@ -41,26 +59,26 @@ export default function UserPage() {
   }, [selectUserId]);
 
   const getUserList = () => {
-    setLoading(true);
+    // setLoading(true);
     axiosInstance
       .get("users")
       .then((response) => {
         setUserList(response.data);
       })
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+      .catch((error) => console.error(error));
+      // .finally(() => setLoading(false));
   };
 
   const deleteUser = () => {
-    setLoading(true);
+    // setLoading(true);
     axiosInstance
       .delete(`/users/${selectUserId}`)
       .then(() => {
         getUserList();
         closeConfirmationModel();
       })
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+      .catch((error) => console.error(error));
+      // .finally(() => setLoading(false));
   };
 
   const closeModel = () => {
@@ -80,7 +98,8 @@ export default function UserPage() {
       <Layout2>
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-bold text-gray-800">Manage User</h1>
-          <div className="flex items-center gap-3">
+          
+          {canCreate && <div className="flex items-center gap-3">
             <button
               className="flex items-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
               onClick={() => setIsShow(true)}
@@ -100,14 +119,15 @@ export default function UserPage() {
               Add User
             </button>
           </div>
+}
         </div>
         {userList.length > 0 && (
           <Table
             headers={harder}
             data={userList}
             setSelectedId={setSelectedUserId}
-            setIsDelete={setIsDelete}
-          />
+            setIsDelete={setIsDelete} 
+            resource={"users"}          />
         )}
         {isShow && (
           <AddUser isOpen={isShow} onClose={closeModel} id={selectUserId} />

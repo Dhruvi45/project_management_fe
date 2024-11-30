@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import Loader from "src/components/Loader";
 import axiosInstance from "../lib/axios";
 import { ITask } from "./page";
+import { useAuth } from "../lib/useAuth";
 // import useApiClient from "../lib/axios";
 interface ModalProps {
     isOpen: boolean;
@@ -20,10 +21,12 @@ interface IProjectList {
 }
 
 export default function AddTask({ isOpen, onClose, id }: ModalProps) {
+    const { user  } = useAuth();
+
     const [loading, setLoading] = useState(false);
     const [userList, setUserList] = useState<IUserList[]>([]);
     const [projectList, setProjectList] = useState<IProjectList[]>([]);
-
+    const disableForTeamMember = user?.role.name==="Team Member";
     useEffect(() => {
         const initialize = async () => {
             try {
@@ -184,6 +187,7 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
                                 </label>
                                 <input
                                     id="title"
+                                    disabled={disableForTeamMember}
                                     {...register("title", { required: "Title is required" })}
                                     placeholder="Enter task title"
                                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -259,6 +263,7 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
                                 </label>
                                 <select
                                     id="project"
+                                    disabled={disableForTeamMember}
                                     {...register("project", {
                                         required: "Project is required",
                                         onChange: (event) => getProjectMemberList(event.target.value)
