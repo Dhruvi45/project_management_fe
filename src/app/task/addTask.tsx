@@ -25,7 +25,6 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
     const [projectList, setProjectList] = useState<IProjectList[]>([]);
 
     useEffect(() => {
-        getUserList();
         getProjectList();
         if (id) {
             getTaskById();
@@ -40,7 +39,8 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
         register,
         handleSubmit,
         formState: { errors },
-        reset
+        reset,
+        getValues
     } = useForm<ITask>();
 
     const onSubmit = (data: ITask) => {
@@ -81,20 +81,26 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
             });
     };
 
-    const getUserList = async () => {
-        try {
-            setLoading(true);
-            axiosInstance
-                .get("usersList?role=tm")
-                .then((response) => {
-                    setUserList(response.data.data);
-                })
-                .catch((error) => console.error(error))
-                .finally(() => {
-                    setLoading(false);
-                });
-        } catch (error) {
-            console.error("Error fetching roles:", error);
+    const getProjectMemberList = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedValue = event.target.value;
+        console.log("selectedValue", selectedValue);
+        if (!selectedValue) {
+            setUserList([]);
+        } else {
+            try {
+                setLoading(true);
+                axiosInstance
+                    .get(`projectMemberList/${selectedValue}`)
+                    .then((response) => {
+                        setUserList(response.data.data);
+                    })
+                    .catch((error) => console.error(error))
+                    .finally(() => {
+                        setLoading(false);
+                    });
+            } catch (error) {
+                console.error("Error fetching roles:", error);
+            }
         }
     };
 
@@ -236,6 +242,36 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
                                     {errors.dueDate?.message}
                                 </p>
                             </div>
+                            {/* Project */}
+                            <div>
+                                <label
+                                    htmlFor="project"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Project
+                                </label>
+                                <select
+                                    id="project"
+                                    {...register("project", {
+                                        required: "Project is required",
+                                        onChange: getProjectMemberList
+                                    })}
+                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                >
+                                    <option value="">Select a project</option>
+                                    {projectList.map((project) => (
+                                        <option key={project._id} value={project._id}>
+                                            {project.title}
+                                        </option>
+                                    ))}
+                                </select>
+                                <p
+                                    className={`text-xs text-red-500 mt-1 min-h-[1rem] ${errors.project ? "visible" : "invisible"
+                                        }`}
+                                >
+                                    {errors.project?.message}
+                                </p>
+                            </div>
 
                             {/* Assigned To */}
                             <div>
@@ -247,11 +283,12 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
                                 </label>
                                 <select
                                     id="assignedTo"
+                                    disabled={!getValues("project")}
                                     {...register("assignedTo", { required: "Assigned user is required" })}
                                     className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 >
                                     <option value="">Select a user</option>
-                                    {userList.length>0 && userList.map((user) => (
+                                    {userList.length > 0 && userList.map((user) => (
                                         <option key={user._id} value={user._id}>
                                             {user.name}
                                         </option>
@@ -265,33 +302,7 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
                                 </p>
                             </div>
 
-                            {/* Project */}
-                            <div>
-                                <label
-                                    htmlFor="project"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Project
-                                </label>
-                                <select
-                                    id="project"
-                                    {...register("project", { required: "Project is required" })}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                >
-                                    <option value="">Select a project</option>
-                                    {projectList.map((project) => (
-                                        <option key={project._id} value={JSON.stringify(project._id)}>
-                                            {project.title}
-                                        </option>
-                                    ))}
-                                </select>
-                                <p
-                                    className={`text-xs text-red-500 mt-1 min-h-[1rem] ${errors.project ? "visible" : "invisible"
-                                        }`}
-                                >
-                                    {errors.project?.message}
-                                </p>
-                            </div>
+
                             {/* Submit Button */}
                             <button
                                 type="submit"
