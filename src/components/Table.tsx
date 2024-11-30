@@ -30,7 +30,11 @@ export default function Table({ headers, data, setSelectedId, setIsDelete, resou
   };
 
   // Check if the user has the required permissions
-  const canEdit = user?.role.permissions.some((permission: Permission) => permission.resource === resource && permission.actions.includes("edit"));
+  const canEdit = user?.role.permissions.some((permission: Permission) => permission.resource === resource && 
+  (permission.actions.includes("edit") || 
+  permission.actions.includes("edit_teamMember")||
+  permission.actions.includes("edit_detail")
+));
   const canDelete = user?.role.permissions.some((permission: Permission) => permission.resource === resource && permission.actions.includes("delete"));
 
   return (

@@ -25,7 +25,10 @@ export default function UserPage() {
 
   // Check if the user has the required permissions
   const canView = user?.role.permissions.some((permission: Permission) => permission.resource === "users"&& permission.actions.includes("view"));
-  const canCreate = user?.role.permissions.some((permission: Permission) => permission.resource === "users" && permission.actions.includes("create"));
+  const canCreate = user?.role.permissions.some((permission: Permission) => 
+    permission.resource === "users" && 
+  permission.actions.includes("create") || permission.actions.includes("create_teamMember")
+);
 
   const harder = [
     { label: "Action", key: "action" },
