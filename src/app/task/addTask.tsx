@@ -54,7 +54,6 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
     } = useForm<ITask>();
 
     const onSubmit = (data: ITask) => {
-        console.log("Form Data:", data);
         setLoading(true);
         if (id) {
             updateTask(data);

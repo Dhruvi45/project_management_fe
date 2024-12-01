@@ -16,7 +16,7 @@ export type UserFormInputs = {
 };
 
 export default function UserPage() {
-  const { user, loading  } = useAuth();
+  const { user, loading } = useAuth();
   // const [loading, setLoading] = useState(false);
   const [userList, setUserList] = useState([]);
   const [isShow, setIsShow] = useState(false);
@@ -24,11 +24,18 @@ export default function UserPage() {
   const [isDelete, setIsDelete] = useState(false);
 
   // Check if the user has the required permissions
-  const canView = user?.role.permissions.some((permission: Permission) => permission.resource === "users"&& permission.actions.includes("view"));
-  const canCreate = user?.role.permissions.some((permission: Permission) => 
-    permission.resource === "users" && 
-  permission.actions.includes("create") || permission.actions.includes("create_teamMember")
-);
+  const canView = user?.role.permissions.some(
+    (permission: Permission) =>
+      permission.resource === "users" &&
+      (permission.actions.includes("view") ||
+        permission.actions.includes("view_teamMember"))
+  );
+  const canCreate = user?.role.permissions.some(
+    (permission: Permission) =>
+      (permission.resource === "users" &&
+        permission.actions.includes("create")) ||
+      permission.actions.includes("create_teamMember")
+  );
 
   const harder = [
     { label: "Action", key: "action" },
@@ -43,16 +50,16 @@ export default function UserPage() {
     getUserList();
   }, []);
   useEffect(() => {
-    console.log(user,"projectList");
-     if (loading) return; // Avoid rendering while loading the user data
-     if (!user) {
-       // Redirect to login if user is not authenticated
-       window.location.href = "/login";
-     } else if (!canView) {
-       // Redirect or show an error if the user doesn't have permission to create projects
-       window.location.href = "/";
-     }
-   }, [user, loading]);
+    console.log(user, "projectList");
+    if (loading) return; // Avoid rendering while loading the user data
+    if (!user) {
+      // Redirect to login if user is not authenticated
+      window.location.href = "/login";
+    } else if (!canView) {
+      // Redirect or show an error if the user doesn't have permission to create projects
+      window.location.href = "/";
+    }
+  }, [user, loading]);
 
   useEffect(() => {
     console.log("selectUserId", selectUserId);
@@ -69,7 +76,7 @@ export default function UserPage() {
         setUserList(response.data);
       })
       .catch((error) => console.error(error));
-      // .finally(() => setLoading(false));
+    // .finally(() => setLoading(false));
   };
 
   const deleteUser = () => {
@@ -81,7 +88,7 @@ export default function UserPage() {
         closeConfirmationModel();
       })
       .catch((error) => console.error(error));
-      // .finally(() => setLoading(false));
+    // .finally(() => setLoading(false));
   };
 
   const closeModel = () => {
@@ -101,36 +108,38 @@ export default function UserPage() {
       <Layout2>
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-bold text-gray-800">Manage User</h1>
-          
-          {canCreate && <div className="flex items-center gap-3">
-            <button
-              className="flex items-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-              onClick={() => setIsShow(true)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-2"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+
+          {canCreate && (
+            <div className="flex items-center gap-3">
+              <button
+                className="flex items-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+                onClick={() => setIsShow(true)}
               >
-                <path
-                  fillRule="evenodd"
-                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H5a1 1 0 110-2h3V6a1 1 0 011-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Add User
-            </button>
-          </div>
-}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H5a1 1 0 110-2h3V6a1 1 0 011-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Add User
+              </button>
+            </div>
+          )}
         </div>
         {userList.length > 0 && (
           <Table
             headers={harder}
             data={userList}
             setSelectedId={setSelectedUserId}
-            setIsDelete={setIsDelete} 
-            resource={"users"}          />
+            setIsDelete={setIsDelete}
+            resource={"users"}
+          />
         )}
         {isShow && (
           <AddUser isOpen={isShow} onClose={closeModel} id={selectUserId} />

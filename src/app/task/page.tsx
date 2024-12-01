@@ -19,7 +19,6 @@ export interface ITask {
   updatedAt: Date;
 }
 
-
 export default function TaskPage() {
   const { user, loading } = useAuth();
   // const [loading, setLoading] = useState(false);
@@ -40,8 +39,14 @@ export default function TaskPage() {
   ];
 
   // Check if the user has the required permissions
-  const canView = user?.role.permissions.some((permission: Permission) => permission.resource === "tasks" && permission.actions.includes("view"));
-  const canCreate = user?.role.permissions.some((permission: Permission) => permission.resource === "tasks" && permission.actions.includes("create"));
+  const canView = user?.role.permissions.some(
+    (permission: Permission) =>
+      permission.resource === "tasks" && permission.actions.includes("view")
+  );
+  const canCreate = user?.role.permissions.some(
+    (permission: Permission) =>
+      permission.resource === "tasks" && permission.actions.includes("create")
+  );
 
   useEffect(() => {
     if (loading) return; // Avoid rendering while loading the user data
@@ -61,8 +66,6 @@ export default function TaskPage() {
       getTaskList("tasks");
     }
   }, []);
-
-
 
   useEffect(() => {
     if (selectTaskId.length > 0 && !isDelete) {
@@ -119,7 +122,7 @@ export default function TaskPage() {
       <Layout2>
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-bold text-gray-800">Manage Task</h1>
-          {canCreate &&
+          {canCreate && (
             <div className="flex items-center gap-3">
               <button
                 className="flex items-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
@@ -140,14 +143,15 @@ export default function TaskPage() {
                 Add Task
               </button>
             </div>
-          }
+          )}
         </div>
         {taskList.length > 0 && (
           <Table
             headers={harder}
             data={taskList}
             setSelectedId={setSelectedTaskId}
-            setIsDelete={setIsDelete} resource={"tasks"}
+            setIsDelete={setIsDelete}
+            resource={"tasks"}
           />
         )}
         {isShow && (

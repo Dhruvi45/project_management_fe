@@ -44,7 +44,6 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
   } = useForm<UserFormInputs>();
 
   const onSubmit = (data: UserFormInputs) => {
-    console.log("Form Data:", data);
     setLoading(true);
     if(id){
       updateUser(data);

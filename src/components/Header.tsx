@@ -14,10 +14,15 @@ export default function Header() {
   const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const router = useRouter();
 
-  const canAccessProject = user?.role.permissions.some((permission: Permission) => permission.resource === "projects");
-  const canAccessTask = user?.role.permissions.some((permission: Permission) => permission.resource === "projects");
-  const canAccessUser = user?.role.permissions.some((permission: Permission) => permission.resource === "projects");
-
+  const canAccessProject = user?.role.permissions.some(
+    (permission: Permission) => permission.resource === "projects"
+  );
+  const canAccessTask = user?.role.permissions.some(
+    (permission: Permission) => permission.resource === "tasks"
+  );
+  const canAccessUser = user?.role.permissions.some(
+    (permission: Permission) => permission.resource === "users"
+  );
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -70,34 +75,35 @@ export default function Header() {
                 alt="Task management"
                 width={40}
                 height={40}
+                onClick={() => router.push("/")}
               />
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                {canAccessUser &&
+                {canAccessUser && (
                   <Link
                     href="/user"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     User
                   </Link>
-                }{
-                  canAccessProject &&
+                )}
+                {canAccessProject && (
                   <Link
                     href="/project"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     Projects
                   </Link>
-                }
-                {canAccessTask &&
+                )}
+                {canAccessTask && (
                   <Link
                     href="/task"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     Tasks
                   </Link>
-                }
+                )}
               </div>
             </div>
           </div>
@@ -125,7 +131,6 @@ export default function Header() {
                   aria-orientation="vertical"
                   aria-labelledby="user-menu-button"
                 >
-
                   <Link
                     href="/login"
                     className="block px-4 py-2 text-sm text-gray-700"
@@ -145,28 +150,30 @@ export default function Header() {
       {isMobileMenuOpen && (
         <div className="sm:hidden" id="mobile-menu">
           <div className="space-y-1 px-2 pb-3 pt-2">
-            {canAccessUser &&
+            {canAccessUser && (
               <Link
                 href="/user"
                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 User
-              </Link>}
-            {canAccessProject &&
+              </Link>
+            )}
+            {canAccessProject && (
               <Link
                 href="/project"
                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 Projects
               </Link>
-            }{canAccessTask &&
+            )}
+            {canAccessTask && (
               <Link
                 href="/task"
                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 Tasks
               </Link>
-            }
+            )}
           </div>
         </div>
       )}

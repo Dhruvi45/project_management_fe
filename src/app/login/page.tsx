@@ -22,7 +22,7 @@ const LoginPage: React.FC = () => {
     } = useForm<LoginFormInputs>();
     const router = useRouter();
     const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-        console.log(data);
+        setLoading(true);
         axiosInstance
             .post("/login", data)
             .then((response) => {

@@ -39,7 +39,6 @@ export default function ProjectPage() {
    const canCreateProject = user?.role.permissions.some((permission: Permission) => permission.resource === "projects" && permission.actions.includes("create"));
 
    useEffect(() => {
-    console.log(user,"projectList");
      if (loading) return; // Avoid rendering while loading the user data
      if (!user) {
        // Redirect to login if user is not authenticated
@@ -52,21 +51,30 @@ export default function ProjectPage() {
 
   const closeModel = () => {
     setIsShow(false);
-    getProjectList();
+    
     setSelectedProjectId("");
+    if (user?.role.name === "Team Member") {
+      getProjectList("projectsByUserId");
+    } else {
+      getProjectList("projects");
+    }
 
   };
 
   const closeConfirmationModel = () => {
     setIsDelete(false);
     setSelectedProjectId("");
-    getProjectList();
+    if (user?.role.name === "Team Member") {
+      getProjectList("projectsByUserId");
+    } else {
+      getProjectList("projects");
+    }
   };
 
-  const getProjectList = () => {
+  const getProjectList = (reqUrl:string) => {
     // setLoading(true);
     axiosInstance
-      .get("projects")
+      .get(reqUrl)
       .then((response) => {
         setProjectList(response.data);
       })
@@ -75,7 +83,11 @@ export default function ProjectPage() {
   };
 
   useEffect(() => {
-    getProjectList();
+    if (user?.role.name === "Team Member") {
+      getProjectList("projectsByUserId");
+    } else {
+      getProjectList("projects");
+    }
   }, []);
 
   useEffect(() => {
@@ -90,7 +102,11 @@ export default function ProjectPage() {
     axiosInstance
       .delete(`/projects/${selectProjectId}`)
       .then(() => {
-        getProjectList();
+        if (user?.role.name === "Team Member") {
+          getProjectList("projectsByUserId");
+        } else {
+          getProjectList("projects");
+        }
         closeConfirmationModel();
       })
       .catch((error) => console.error(error));

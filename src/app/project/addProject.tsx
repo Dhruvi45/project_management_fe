@@ -40,7 +40,6 @@ export default function AddProject({ isOpen, onClose, id }: ModalProps) {
     } = useForm<IProject>();
 
     const onSubmit = (data: IProject) => {
-        console.log("Form Data:", data);
         setLoading(true);
         if (id) {
             updateProject(data);
