@@ -37,9 +37,11 @@ export default function Home() {
               <li>Users: create, edit, delete, view</li>
             </ul>
           </div>
-          
+
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Project Manager</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              Project Manager
+            </h3>
             <p className="text-gray-600 mb-4">
               Manages projects and assigns tasks to team members.
             </p>
@@ -51,7 +53,9 @@ export default function Home() {
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Team Member</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              Team Member
+            </h3>
             <p className="text-gray-600 mb-4">
               Contributes to tasks assigned to them and can view projects.
             </p>
@@ -74,19 +78,33 @@ export default function Home() {
 
         {/* CRUD Actions Section */}
         <div className="mt-8">
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4">CRUD Operations</h3>
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+            CRUD Operations
+          </h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h4 className="text-lg font-semibold text-gray-700">User Management</h4>
-              <p className="text-gray-500">Create, Update, Read, and Delete Users</p>
+              <h4 className="text-lg font-semibold text-gray-700">
+                User Management
+              </h4>
+              <p className="text-gray-500">
+                Create, Update, Read, and Delete Users
+              </p>
             </div>
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h4 className="text-lg font-semibold text-gray-700">Project Management</h4>
-              <p className="text-gray-500">Create, Update, Read, and Delete Projects</p>
+              <h4 className="text-lg font-semibold text-gray-700">
+                Project Management
+              </h4>
+              <p className="text-gray-500">
+                Create, Update, Read, and Delete Projects
+              </p>
             </div>
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h4 className="text-lg font-semibold text-gray-700">Task Management</h4>
-              <p className="text-gray-500">Create, Update, Read, and Delete Tasks</p>
+              <h4 className="text-lg font-semibold text-gray-700">
+                Task Management
+              </h4>
+              <p className="text-gray-500">
+                Create, Update, Read, and Delete Tasks
+              </p>
             </div>
           </div>
         </div>
