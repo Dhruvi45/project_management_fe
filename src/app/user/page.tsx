@@ -16,8 +16,8 @@ export type UserFormInputs = {
 };
 
 export default function UserPage() {
-  const { user, loading } = useAuth();
-  // const [loading, setLoading] = useState(false);
+  const { user, loadingAuth } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [userList, setUserList] = useState([]);
   const [isShow, setIsShow] = useState(false);
   const [selectUserId, setSelectedUserId] = useState("");
@@ -50,8 +50,7 @@ export default function UserPage() {
     getUserList();
   }, []);
   useEffect(() => {
-    console.log(user, "projectList");
-    if (loading) return; // Avoid rendering while loading the user data
+    if (loadingAuth) return; // Avoid rendering while loading the user data
     if (!user) {
       // Redirect to login if user is not authenticated
       window.location.href = "/login";
@@ -59,7 +58,7 @@ export default function UserPage() {
       // Redirect or show an error if the user doesn't have permission to create projects
       window.location.href = "/";
     }
-  }, [user, loading]);
+  }, [user, loadingAuth]);
 
   useEffect(() => {
     console.log("selectUserId", selectUserId);
@@ -69,26 +68,26 @@ export default function UserPage() {
   }, [selectUserId]);
 
   const getUserList = () => {
-    // setLoading(true);
+    setLoading(true);
     axiosInstance
       .get("users")
       .then((response) => {
         setUserList(response.data);
       })
-      .catch((error) => console.error(error));
-    // .finally(() => setLoading(false));
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   };
 
   const deleteUser = () => {
-    // setLoading(true);
+    setLoading(true);
     axiosInstance
       .delete(`/users/${selectUserId}`)
       .then(() => {
         getUserList();
         closeConfirmationModel();
       })
-      .catch((error) => console.error(error));
-    // .finally(() => setLoading(false));
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   };
 
   const closeModel = () => {
@@ -101,7 +100,7 @@ export default function UserPage() {
     setSelectedUserId("");
   };
 
-  if (loading) return <Loader />;
+  if (loading || loadingAuth) return <Loader />;
 
   return (
     <>

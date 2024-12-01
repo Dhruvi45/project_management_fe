@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-// import logo from "../../public/assets/images/logso1.png";
 
 // Keep the `metadata` export outside of "use client" scope, as it's meant for server-side use
 export const metadata: Metadata = {

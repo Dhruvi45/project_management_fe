@@ -20,8 +20,8 @@ export interface ITask {
 }
 
 export default function TaskPage() {
-  const { user, loading } = useAuth();
-  // const [loading, setLoading] = useState(false);
+  const { user, loadingAuth } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [taskList, setTaskList] = useState([]);
   const [isShow, setIsShow] = useState(false);
   const [selectTaskId, setSelectedTaskId] = useState("");
@@ -49,7 +49,7 @@ export default function TaskPage() {
   );
 
   useEffect(() => {
-    if (loading) return; // Avoid rendering while loading the user data
+    if (loadingAuth) return; // Avoid rendering while loading the user data
     if (!user) {
       // Redirect to login if user is not authenticated
       window.location.href = "/login";
@@ -57,7 +57,7 @@ export default function TaskPage() {
       // Redirect or show an error if the user doesn't have permission to create projects
       window.location.href = "/";
     }
-  }, [user, loading]);
+  }, [user, loadingAuth]);
 
   useEffect(() => {
     if (user?.role.name === "Team Member") {
@@ -74,18 +74,18 @@ export default function TaskPage() {
   }, [selectTaskId]);
 
   const getTaskList = (reqUrl: string) => {
-    // setLoading(true);
+    setLoading(true);
     axiosInstance
       .get(reqUrl)
       .then((response) => {
         setTaskList(response.data);
       })
-      .catch((error) => console.error(error));
-    // .finally(() => setLoading(false));
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   };
 
   const deleteTask = () => {
-    // setLoading(true);
+    setLoading(true);
     axiosInstance
       .delete(`/tasks/${selectTaskId}`)
       .then(() => {
@@ -96,8 +96,8 @@ export default function TaskPage() {
         }
         closeConfirmationModel();
       })
-      .catch((error) => console.error(error));
-    // .finally(() => setLoading(false));
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   };
 
   const closeModel = () => {
@@ -115,7 +115,7 @@ export default function TaskPage() {
     setSelectedTaskId("");
   };
 
-  if (loading) return <Loader />;
+  if (loading || loadingAuth) return <Loader />;
 
   return (
     <>

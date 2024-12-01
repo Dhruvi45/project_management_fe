@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import {jwtDecode} from "jwt-decode"; // Ensure this import is correct
+import { jwtDecode } from "jwt-decode"; // Ensure this import is correct
 import { useRouter } from "next/navigation"; // Correct import for Next.js v13+
 
 export interface Permission {
@@ -35,7 +35,7 @@ const getToken = () => {
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingAuth, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -56,5 +56,5 @@ export const useAuth = () => {
     setLoading(false);
   }, [router]);
 
-  return { user, loading };
+  return { user, loadingAuth };
 };

@@ -8,18 +8,17 @@ import axiosInstance from "../lib/axios";
 import Layout2 from "../layout2";
 import { Permission, useAuth } from "../lib/useAuth";
 
-
 export interface IProject {
   title: string;
   description?: string;
   owner: string;
-  members: string[]; 
+  members: string[];
   // tasks: string[]; // Array of Task IDs
 }
 
 export default function ProjectPage() {
-  const { user, loading  } = useAuth();
-  // const [loading, setLoading] = useState(false);
+  const { user, loadingAuth } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [projectList, setProjectList] = useState([]);
   const [isShow, setIsShow] = useState(false);
   const [selectProjectId, setSelectedProjectId] = useState("");
@@ -34,31 +33,37 @@ export default function ProjectPage() {
     { label: "Updated Date", key: "updatedAt" },
   ];
 
-   // Check if the user has the required permissions
-   const canViewProject = user?.role.permissions.some((permission: Permission) => permission.resource === "projects"&& permission.actions.includes("view"));
-   const canCreateProject = user?.role.permissions.some((permission: Permission) => permission.resource === "projects" && permission.actions.includes("create"));
+  // Check if the user has the required permissions
+  const canViewProject = user?.role.permissions.some(
+    (permission: Permission) =>
+      permission.resource === "projects" && permission.actions.includes("view")
+  );
+  const canCreateProject = user?.role.permissions.some(
+    (permission: Permission) =>
+      permission.resource === "projects" &&
+      permission.actions.includes("create")
+  );
 
-   useEffect(() => {
-     if (loading) return; // Avoid rendering while loading the user data
-     if (!user) {
-       // Redirect to login if user is not authenticated
-       window.location.href = "/login";
-     } else if (!canViewProject) {
-       // Redirect or show an error if the user doesn't have permission to create projects
-       window.location.href = "/";
-     }
-   }, [user, loading]);
+  useEffect(() => {
+    if (loadingAuth) return; // Avoid rendering while loading the user data
+    if (!user) {
+      // Redirect to login if user is not authenticated
+      window.location.href = "/login";
+    } else if (!canViewProject) {
+      // Redirect or show an error if the user doesn't have permission to create projects
+      window.location.href = "/";
+    }
+  }, [user, loadingAuth]);
 
   const closeModel = () => {
     setIsShow(false);
-    
+
     setSelectedProjectId("");
     if (user?.role.name === "Team Member") {
       getProjectList("projectsByUserId");
     } else {
       getProjectList("projects");
     }
-
   };
 
   const closeConfirmationModel = () => {
@@ -71,15 +76,15 @@ export default function ProjectPage() {
     }
   };
 
-  const getProjectList = (reqUrl:string) => {
-    // setLoading(true);
+  const getProjectList = (reqUrl: string) => {
+    setLoading(true);
     axiosInstance
       .get(reqUrl)
       .then((response) => {
         setProjectList(response.data);
       })
-      .catch((error) => console.error(error));
-      // .finally(() => setLoading(false));
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -91,14 +96,13 @@ export default function ProjectPage() {
   }, []);
 
   useEffect(() => {
-    console.log("selectProjectId.length ", selectProjectId.length ,isDelete);
     if (selectProjectId.length > 0 && !isDelete) {
       setIsShow(true);
     }
   }, [selectProjectId]);
 
   const deleteProject = () => {
-    // setLoading(true);
+    setLoading(true);
     axiosInstance
       .delete(`/projects/${selectProjectId}`)
       .then(() => {
@@ -109,62 +113,66 @@ export default function ProjectPage() {
         }
         closeConfirmationModel();
       })
-      .catch((error) => console.error(error));
-      // .finally(() => setLoading(false));
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   };
 
-
-    if (loading) return <Loader />;
+  if (loading || loadingAuth) return <Loader />;
 
   return (
     <>
-    <Layout2>
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl font-bold text-gray-800">Manage Project</h1>
-        <div className="flex items-center gap-3">          
-        {canCreateProject &&<button
-            className="flex items-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-            onClick={() => setIsShow(true)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 mr-2"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H5a1 1 0 110-2h3V6a1 1 0 011-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-            Add Project
-          </button>
-}
+      <Layout2>
+        <div className="flex justify-between items-center">
+          <h1 className="text-xl font-bold text-gray-800">Manage Project</h1>
+          <div className="flex items-center gap-3">
+            {canCreateProject && (
+              <button
+                className="flex items-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+                onClick={() => setIsShow(true)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H5a1 1 0 110-2h3V6a1 1 0 011-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Add Project
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-      {projectList.length > 0 && (
-        <Table
-          headers={harder}
-          data={projectList}
-          setSelectedId={setSelectedProjectId}
-          setIsDelete={setIsDelete}
-          resource={"projects"}
-        />
-      )}
-      {isShow && (
-        <AddProject isOpen={isShow} onClose={closeModel} id={selectProjectId} />
-      )}
-      {isDelete && (
-        <ConfirmationDialog
-          isOpen={isDelete}
-          onClose={closeConfirmationModel}
-          onConfirm={deleteProject}
-          message={"Are you sure you want to delete project?"}
-          title={"Delete Project"}
-        />
-      )}
+        {projectList.length > 0 && (
+          <Table
+            headers={harder}
+            data={projectList}
+            setSelectedId={setSelectedProjectId}
+            setIsDelete={setIsDelete}
+            resource={"projects"}
+          />
+        )}
+        {isShow && (
+          <AddProject
+            isOpen={isShow}
+            onClose={closeModel}
+            id={selectProjectId}
+          />
+        )}
+        {isDelete && (
+          <ConfirmationDialog
+            isOpen={isDelete}
+            onClose={closeConfirmationModel}
+            onConfirm={deleteProject}
+            message={"Are you sure you want to delete project?"}
+            title={"Delete Project"}
+          />
+        )}
       </Layout2>
     </>
   );
-  }
+}
