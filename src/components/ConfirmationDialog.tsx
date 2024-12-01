@@ -15,7 +15,7 @@ const ConfirmationDialog = ({
   onConfirm,
   message,
   title,
-}:ConfirmationDialogProps) => {
+}: ConfirmationDialogProps) => {
   if (!isOpen) return null;
 
   return (
