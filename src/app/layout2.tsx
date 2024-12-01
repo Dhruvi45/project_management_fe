@@ -4,7 +4,7 @@ import Header from "src/components/Header";
 
 
 export default function Layout2({ children }: { children: React.ReactNode }) {
-
+   
     return (
         <>
             <Header />

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import {jwtDecode} from "jwt-decode";
-import { useRouter } from "next/router";
+import {jwtDecode} from "jwt-decode"; // Ensure this import is correct
+import { useRouter } from "next/navigation"; // Correct import for Next.js v13+
 
 export interface Permission {
   resource: string;

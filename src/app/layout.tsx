@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { useAuth } from "./lib/useAuth";
+// import logo from "../../public/assets/images/logso1.png";
 
 // Keep the `metadata` export outside of "use client" scope, as it's meant for server-side use
 export const metadata: Metadata = {
   title: "Project Management",
   description: "Project management system",
+  icons:"../../public/assets/images/logo1.png"
 };
 
 
@@ -28,14 +29,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   
-
-  const { user } = useAuth();
- 
-
-  // If `useAuth` redirected, this part won't render
-  if (!user) {
-    return null; // Ensure nothing flashes before redirection
-  }
 
   return (
     <html lang="en">
