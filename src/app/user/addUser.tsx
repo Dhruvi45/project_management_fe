@@ -4,6 +4,7 @@ import Loader from "src/components/Loader";
 import axiosInstance from "../lib/axios";
 import { UserFormInputs } from "./page";
 import { useAuth } from "../lib/useAuth";
+import { toast } from "react-toastify";
 // import useApiClient from "../lib/axios";
 interface ModalProps {
   isOpen: boolean;
@@ -16,8 +17,8 @@ interface IRoleList {
   name: string;
 }
 
-export default function AddUser({ isOpen, onClose,id }: ModalProps) {
-  const { user  } = useAuth();
+export default function AddUser({ isOpen, onClose, id }: ModalProps) {
+  const { user } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const [roleList, setRoleList] = useState<IRoleList[]>([]);
@@ -27,60 +28,60 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
     } else {
       getRoleList("roles/list");
     }
-    if(id){
+    if (id) {
       getUserById();
-    }
-    else{
+    } else {
       reset();
     }
   }, []);
-  
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
   } = useForm<UserFormInputs>();
 
   const onSubmit = (data: UserFormInputs) => {
     setLoading(true);
-    if(id){
+    if (id) {
       updateUser(data);
-    }
-    else{
+    } else {
       addUser(data);
     }
-   
   };
   //   const apiClient = useApiClient();
   if (!isOpen) return null;
 
-  const addUser=(data:UserFormInputs)=>{
+  const addUser = (data: UserFormInputs) => {
     axiosInstance
-    .post("/users",data)
-    .then(() => {
-      onClose();
-    })
-    .catch((error) => console.error(error))
-    .finally(() => {
-      setLoading(false);
-    });
+      .post("/users", data)
+      .then(() => {
+        toast.success("User added successfully");
+        onClose();
+      })
+      .catch((error) => {
+        toast.error(error.response?.data?.error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
-  const updateUser=(data:UserFormInputs)=>{
+  const updateUser = (data: UserFormInputs) => {
     axiosInstance
-    .put(`/users/${id}`,data)
-    .then(() => {
-      onClose();
-    })
-    .catch((error) => console.error(error))
-    .finally(() => {
-      setLoading(false);
-    });
+      .put(`/users/${id}`, data)
+      .then(() => {
+        toast.success("User updated successfully");
+        onClose();
+      })
+      .catch((error) => toast.error(error.response?.data?.error))
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
-  const getRoleList = async (reqUrl:string) => {
+  const getRoleList = async (reqUrl: string) => {
     try {
       setLoading(true);
       axiosInstance
@@ -97,7 +98,7 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
     }
   };
 
-  const getUserById = async()=>{
+  const getUserById = async () => {
     try {
       setLoading(true);
       axiosInstance
@@ -128,7 +129,9 @@ export default function AddUser({ isOpen, onClose,id }: ModalProps) {
         <div className="bg-white w-full max-w-lg mx-4 rounded-lg shadow-lg h-66 overflow-y-auto">
           {/* Header */}
           <div className="flex justify-between items-center p-4">
-            <h2 className="text-lg font-semibold">{id?"Edit":"Add"} User</h2>
+            <h2 className="text-lg font-semibold">
+              {id ? "Edit" : "Add"} User
+            </h2>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600"

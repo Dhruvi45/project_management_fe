@@ -7,6 +7,7 @@ import axiosInstance from "../lib/axios";
 import Loader from "src/components/Loader";
 import Layout2 from "../layout2";
 import { Permission, useAuth } from "../lib/useAuth";
+import { toast } from "react-toastify";
 
 export interface ITask {
   title: string;
@@ -89,6 +90,7 @@ export default function TaskPage() {
     axiosInstance
       .delete(`/tasks/${selectTaskId}`)
       .then(() => {
+        toast.success("Task deleted successfully");
         if (user?.role.name === "Team Member") {
           getTaskList("projectsByUserId");
         } else {

@@ -7,6 +7,7 @@ import axiosInstance from "../lib/axios";
 import AddUser from "./addUser";
 import Layout2 from "../layout2";
 import { Permission, useAuth } from "../lib/useAuth";
+import { toast } from "react-toastify";
 
 export type UserFormInputs = {
   name: string;
@@ -83,6 +84,7 @@ export default function UserPage() {
     axiosInstance
       .delete(`/users/${selectUserId}`)
       .then(() => {
+        toast.success("User deleted successfully");
         getUserList();
         closeConfirmationModel();
       })

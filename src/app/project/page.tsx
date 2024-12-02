@@ -7,6 +7,7 @@ import ConfirmationDialog from "src/components/ConfirmationDialog";
 import axiosInstance from "../lib/axios";
 import Layout2 from "../layout2";
 import { Permission, useAuth } from "../lib/useAuth";
+import { toast } from "react-toastify";
 
 export interface IProject {
   title: string;
@@ -106,6 +107,7 @@ export default function ProjectPage() {
     axiosInstance
       .delete(`/projects/${selectProjectId}`)
       .then(() => {
+        toast.success("Project deleted successfully");
         if (user?.role.name === "Team Member") {
           getProjectList("projectsByUserId");
         } else {

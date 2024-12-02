@@ -4,6 +4,7 @@ import Loader from "src/components/Loader";
 import axiosInstance from "../lib/axios";
 import { ITask } from "./page";
 import { useAuth } from "../lib/useAuth";
+import { toast } from "react-toastify";
 // import useApiClient from "../lib/axios";
 interface ModalProps {
   isOpen: boolean;
@@ -67,6 +68,7 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
     axiosInstance
       .post("/tasks", data)
       .then(() => {
+        toast.success("Task added successfully");
         onClose();
       })
       .catch((error) => console.error(error))
@@ -79,6 +81,7 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
     axiosInstance
       .put(`/tasks/${id}`, data)
       .then(() => {
+        toast.success("Task updated successfully");
         onClose();
       })
       .catch((error) => console.error(error))
