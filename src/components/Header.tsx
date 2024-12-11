@@ -7,6 +7,7 @@ import logo from "../../public/assets/images/logo1.png";
 import { FaUser } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { Permission, useAuth } from "src/app/lib/useAuth";
+import Cookies from "js-cookie";
 
 export default function Header() {
   const { user } = useAuth();
@@ -34,6 +35,8 @@ export default function Header() {
 
   const handleSignOut = () => {
     localStorage.clear();
+    Cookies.remove("accessToken", { path: "/" });
+    Cookies.remove("role", { path: "/" });
     router.push("/login");
   };
 

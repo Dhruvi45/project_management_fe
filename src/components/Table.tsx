@@ -8,7 +8,7 @@ type HeadersProps = {
   key: string;
 };
 
-type DataRow = {
+export type DataRow = {
   _id: string;
   [key: string]: string | number | Date; // Adjust according to expected data types
 };
@@ -17,11 +17,12 @@ type TableProps = {
   headers: HeadersProps[];
   data: DataRow[];
   setSelectedId: (id: string) => void;
+  setIsShow:(value: boolean) => void;
   setIsDelete: (value: boolean) => void;
   resource: string;
 };
 
-export default function Table({ headers, data, setSelectedId, setIsDelete, resource }: TableProps) {
+export default function Table({ headers, data, setSelectedId,setIsShow, setIsDelete, resource }: TableProps) {
   const { user } = useAuth();
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
 
@@ -95,6 +96,7 @@ export default function Table({ headers, data, setSelectedId, setIsDelete, resou
                                     className="text-blue-500 hover:text-blue-700 focus:outline-none mr-2"
                                     onClick={() => {
                                       setSelectedId(key._id);
+                                      setIsShow(true);
                                     }}
                                   >
                                     <FiEdit className="w-5 h-5" />

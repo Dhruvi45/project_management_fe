@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axiosInstance from "../lib/axios";
 import Loader from "src/components/Loader";
+import Cookies from "js-cookie"; 
 
 interface LoginFormInputs {
   email: string;
@@ -28,6 +29,17 @@ const LoginPage: React.FC = () => {
       .then((response) => {
         router.push("/");
         localStorage.setItem("accessToken", response.data.token);
+
+         Cookies.set("accessToken", response.data.token, {
+          expires: 1 / 24, 
+          secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+          path: "/", // Make cookie accessible across the site
+        });
+        Cookies.set("role", response.data.role, {
+          expires: 1 / 24, 
+          secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+          path: "/", // Make cookie accessible across the site
+        });
       })
       .catch((error) => console.error(error))
       .finally(() => {

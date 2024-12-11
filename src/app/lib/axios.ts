@@ -1,17 +1,28 @@
-import axios, { AxiosResponse } from "axios";
+// src/app/lib/axios.ts
+import axios, { AxiosInstance } from "axios";
+
+let accessToken: string | undefined;
+
+if (typeof window === "undefined") {
+  // Server-side
+  const { cookies } = await import("next/headers");
+  const cookieStore = cookies();
+  accessToken = cookieStore.get("accessToken")?.value;
+} else {
+  // Client-side
+  accessToken = localStorage.getItem("accessToken") || undefined;
+}
 
 // Create an Axios instance
-const axiosInstance = axios.create({
+const axiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_APP_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Request interceptor to add the Authorization header to each request
 axiosInstance.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem("accessToken");
 
     if (accessToken && config.headers) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -24,14 +35,15 @@ axiosInstance.interceptors.request.use(
 
 // Response interceptor to handle token refresh or error logging
 axiosInstance.interceptors.response.use(
-  (response:AxiosResponse) => response,
-  async (error) => {
+  (response) => response,
+  (error) => {
     if (error.response?.status === 401) {
       console.error("Unauthorized: Token may have expired.");
-      localStorage.clear();
-      window.location.assign("/login");
+      if (typeof window !== "undefined") {
+        localStorage.clear();
+        window.location.assign("/login");
+      }
     }
-
     return Promise.reject(error);
   }
 );

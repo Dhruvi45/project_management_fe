@@ -61,12 +61,7 @@ export default function UserPage() {
     }
   }, [user, loadingAuth]);
 
-  useEffect(() => {
-    console.log("selectUserId", selectUserId);
-    if (selectUserId.length > 0 && !isDelete) {
-      setIsShow(true);
-    }
-  }, [selectUserId]);
+
 
   const getUserList = () => {
     setLoading(true);
@@ -138,6 +133,7 @@ export default function UserPage() {
             headers={harder}
             data={userList}
             setSelectedId={setSelectedUserId}
+            setIsShow={setIsShow}
             setIsDelete={setIsDelete}
             resource={"users"}
           />
