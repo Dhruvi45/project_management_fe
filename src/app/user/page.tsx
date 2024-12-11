@@ -5,7 +5,7 @@ import ConfirmationDialog from "src/components/ConfirmationDialog";
 import Loader from "src/components/Loader";
 import Table from "src/components/Table";
 import Layout2 from "../layout2";
-import { default as axiosInstance, default as createAxiosInstance } from "../lib/axios";
+import { default as createAxiosInstance } from "../lib/axios";
 import { Permission, useAuth } from "../lib/useAuth";
 import AddUser from "./addUser";
 
