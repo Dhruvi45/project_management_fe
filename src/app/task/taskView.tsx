@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import ConfirmationDialog from "src/components/ConfirmationDialog";
 import Loader from "src/components/Loader";
 import Table, { DataRow } from "src/components/Table";
-import axiosInstance from "../lib/axios";
+import createAxiosInstance from "../lib/axios";
 import { Permission, useAuth } from "../lib/useAuth";
 import AddTask from "./addTask";
 import { fetchTask } from "./apiCall";
@@ -51,7 +51,9 @@ export default function TaskView({taskList}:Props) {
       permission.resource === "tasks" && permission.actions.includes("create")
   );    
 
-  const deleteTask = () => {
+  const deleteTask = async () => {
+  const axiosInstance = await createAxiosInstance();
+
     setLoading(true);
     axiosInstance
       .delete(`/tasks/${selectTaskId}`)

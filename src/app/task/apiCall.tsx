@@ -1,8 +1,10 @@
 // src/app/task/apiCall.ts
-import axiosInstance from "../lib/axios";
+import createAxiosInstance from "../lib/axios";
 
 export const fetchTask = async (role:string|undefined) => {
     const reqUrl = role === "Team Member" ? "projectsByUserId" : "tasks";
+  const axiosInstance = await createAxiosInstance();
+
     const response = await axiosInstance
       .get(reqUrl)
       .then((response) => {

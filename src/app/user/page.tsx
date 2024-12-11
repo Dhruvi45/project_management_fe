@@ -1,13 +1,13 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import ConfirmationDialog from "src/components/ConfirmationDialog";
 import Loader from "src/components/Loader";
 import Table from "src/components/Table";
-import axiosInstance from "../lib/axios";
-import AddUser from "./addUser";
 import Layout2 from "../layout2";
+import { default as axiosInstance, default as createAxiosInstance } from "../lib/axios";
 import { Permission, useAuth } from "../lib/useAuth";
-import { toast } from "react-toastify";
+import AddUser from "./addUser";
 
 export type UserFormInputs = {
   name: string;
@@ -63,8 +63,10 @@ export default function UserPage() {
 
 
 
-  const getUserList = () => {
+  const getUserList = async () => {
     setLoading(true);
+  const axiosInstance = await createAxiosInstance();
+
     axiosInstance
       .get("users")
       .then((response) => {
@@ -74,7 +76,9 @@ export default function UserPage() {
       .finally(() => setLoading(false));
   };
 
-  const deleteUser = () => {
+  const deleteUser = async () => {
+  const axiosInstance = await createAxiosInstance();
+
     setLoading(true);
     axiosInstance
       .delete(`/users/${selectUserId}`)

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import Loader from "src/components/Loader";
-import axiosInstance from "../lib/axios";
-import { UserFormInputs } from "./page";
-import { useAuth } from "../lib/useAuth";
 import { toast } from "react-toastify";
+import Loader from "src/components/Loader";
+import createAxiosInstance from "../lib/axios";
+import { useAuth } from "../lib/useAuth";
+import { UserFormInputs } from "./page";
 // import useApiClient from "../lib/axios";
 interface ModalProps {
   isOpen: boolean;
@@ -53,7 +53,9 @@ export default function AddUser({ isOpen, onClose, id }: ModalProps) {
   //   const apiClient = useApiClient();
   if (!isOpen) return null;
 
-  const addUser = (data: UserFormInputs) => {
+  const addUser = async (data: UserFormInputs) => {
+    const axiosInstance = await createAxiosInstance();
+
     axiosInstance
       .post("/users", data)
       .then(() => {
@@ -68,7 +70,9 @@ export default function AddUser({ isOpen, onClose, id }: ModalProps) {
       });
   };
 
-  const updateUser = (data: UserFormInputs) => {
+  const updateUser = async (data: UserFormInputs) => {
+    const axiosInstance = await createAxiosInstance();
+
     axiosInstance
       .put(`/users/${id}`, data)
       .then(() => {
@@ -83,6 +87,8 @@ export default function AddUser({ isOpen, onClose, id }: ModalProps) {
 
   const getRoleList = async (reqUrl: string) => {
     try {
+      const axiosInstance = await createAxiosInstance();
+
       setLoading(true);
       axiosInstance
         .get(reqUrl)
@@ -100,6 +106,8 @@ export default function AddUser({ isOpen, onClose, id }: ModalProps) {
 
   const getUserById = async () => {
     try {
+      const axiosInstance = await createAxiosInstance();
+
       setLoading(true);
       axiosInstance
         .get(`/users/${id}`)

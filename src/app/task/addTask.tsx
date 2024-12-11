@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import Loader from "src/components/Loader";
-import axiosInstance from "../lib/axios";
-import { ITask } from "./page";
-import { useAuth } from "../lib/useAuth";
 import { toast } from "react-toastify";
+import Loader from "src/components/Loader";
+import createAxiosInstance from "../lib/axios";
+import { useAuth } from "../lib/useAuth";
+import { ITask } from "./page";
 // import useApiClient from "../lib/axios";
 interface ModalProps {
   isOpen: boolean;
@@ -64,7 +64,9 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
   //   const apiClient = useApiClient();
   if (!isOpen) return null;
 
-  const addTask = (data: ITask) => {
+  const addTask = async (data: ITask) => {
+  const axiosInstance = await createAxiosInstance();
+
     axiosInstance
       .post("/tasks", data)
       .then(() => {
@@ -77,7 +79,9 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
       });
   };
 
-  const updateTask = (data: ITask) => {
+  const updateTask = async (data: ITask) => {
+  const axiosInstance = await createAxiosInstance();
+
     axiosInstance
       .put(`/tasks/${id}`, data)
       .then(() => {
@@ -92,6 +96,8 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
 
   const getProjectMemberList = async (projectId: string) => {
     try {
+  const axiosInstance = await createAxiosInstance();
+
       setLoading(true);
       if (!projectId) {
         setUserList([]);
@@ -110,6 +116,8 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
 
   const getProjectList = async () => {
     try {
+  const axiosInstance = await createAxiosInstance();
+
       setLoading(true);
       axiosInstance
         .get("projectList")
@@ -127,6 +135,8 @@ export default function AddTask({ isOpen, onClose, id }: ModalProps) {
 
   const getTaskById = async () => {
     try {
+  const axiosInstance = await createAxiosInstance();
+
       setLoading(true);
       const { data } = await axiosInstance.get(`/tasks/${id}`);
       console.log(data);

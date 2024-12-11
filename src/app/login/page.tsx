@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import logo from "../../../public/assets/images/logo1.png";
+import Cookies from "js-cookie";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import axiosInstance from "../lib/axios";
+import React, { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import Loader from "src/components/Loader";
-import Cookies from "js-cookie"; 
+import logo from "../../../public/assets/images/logo1.png";
+import createAxiosInstance from "../lib/axios";
 
 interface LoginFormInputs {
   email: string;
@@ -22,7 +22,8 @@ const LoginPage: React.FC = () => {
     formState: { errors },
   } = useForm<LoginFormInputs>();
   const router = useRouter();
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+    const axiosInstance = await createAxiosInstance();
     setLoading(true);
     axiosInstance
       .post("/login", data)
@@ -155,3 +156,4 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
+

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import Loader from "src/components/Loader";
-import axiosInstance from "../lib/axios";
-import { IProject } from "./page";
 import { toast } from "react-toastify";
+import Loader from "src/components/Loader";
+import createAxiosInstance from "../lib/axios";
+import { IProject } from "./page";
 // import useApiClient from "../lib/axios";
 interface ModalProps {
   isOpen: boolean;
@@ -16,11 +16,11 @@ interface IUserList {
   name: string;
 }
 
-export default function AddProject({ isOpen, onClose, id }: ModalProps) {
+export default  function AddProject({ isOpen, onClose, id }: ModalProps) {
   const [loading, setLoading] = useState(false);
   const [pmList, setPmList] = useState<IUserList[]>([]);
   const [tmList, setTmList] = useState<IUserList[]>([]);
-
+  
   useEffect(() => {
     getUserList("pm");
     getUserList("tm");
@@ -48,7 +48,8 @@ export default function AddProject({ isOpen, onClose, id }: ModalProps) {
   };
   if (!isOpen) return null;
 
-  const addProject = (data: IProject) => {
+  const addProject = async (data: IProject) => {
+    const axiosInstance = await createAxiosInstance();
     axiosInstance
       .post("/projects", data)
       .then(() => {
@@ -61,7 +62,8 @@ export default function AddProject({ isOpen, onClose, id }: ModalProps) {
       });
   };
 
-  const updateProject = (data: IProject) => {
+  const updateProject = async (data: IProject) => {
+    const axiosInstance = await createAxiosInstance();
     axiosInstance
       .put(`/projects/${id}`, data)
       .then(() => {
@@ -76,6 +78,7 @@ export default function AddProject({ isOpen, onClose, id }: ModalProps) {
 
   const getUserList = async (role: string) => {
     try {
+      const axiosInstance = await createAxiosInstance();
       setLoading(true);
       axiosInstance
         .get(`usersList?role=${role}`)
@@ -97,6 +100,7 @@ export default function AddProject({ isOpen, onClose, id }: ModalProps) {
 
   const getProjectById = async () => {
     try {
+      const axiosInstance = await createAxiosInstance();
       setLoading(true);
       axiosInstance
         .get(`/projects/${id}`)
